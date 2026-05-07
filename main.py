@@ -8,7 +8,7 @@ import NeuralNetwork
 
 
 # create instance of neural network
-neuralNetwork = NeuralNetwork(input_nodes, hidden_nodes, output_nodes, learning_rate)
+neuralNetwork = NeuralNetwork()
 
 # link weight matrices, wih and who
 # weights inside the arrays are w_i_j, where link is from node i to node j in the next layer
