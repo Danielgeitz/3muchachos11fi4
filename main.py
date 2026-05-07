@@ -2,6 +2,8 @@ import numpy
 import scipy.special
 import matplotlib.pyplot
 
+import NeuralNetwork
+
 # initialise the neural network
 def __init__(self, inputNodes, hiddenNodes, outputNodes, learningRate):
     # set number of nodes in each input, hidden output layer
@@ -23,7 +25,7 @@ output_nodes = 3
 learning_rate = 0.3
 
 # create instance of neural network
-neuralNetwork = neuralNetwork(input_nodes, hidden_nodes, output_nodes, learning_rate)
+neuralNetwork = NeuralNetwork(input_nodes, hidden_nodes, output_nodes, learning_rate)
 
 # link weight matrices, wih and who
 # weights inside the arrays are w_i_j, where link is from node i to node j in the next layer
