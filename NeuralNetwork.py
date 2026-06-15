@@ -80,9 +80,9 @@ class NeuralNetwork:
 
 
 # number of input, hidden and output nodes
-input_nodes = 3
-hidden_nodes = 3
-output_nodes = 3
+input_nodes = 784
+hidden_nodes = 100
+output_nodes = 10
 
 # learning rate is 0.3
 learning_rate = 0.3
@@ -90,13 +90,87 @@ learning_rate = 0.3
 # create instance of neural network
 n = NeuralNetwork(input_nodes,hidden_nodes,output_nodes, learning_rate)
 
+# load the mnist training data CSV file into a list
+#training_data_file = open(".\mnist_dataset\mnist_train.csv", 'r')
+training_data_file = open("./mnist_train.csv", 'r')
+
+training_data_list = training_data_file.readlines()
+training_data_file.close()
+
+
+# train the neural network
+
+# epochs is the number of times the training data set is used for training
+epochs = 7
+
+for e in range(epochs):
+    # go through all records in the training data set
+    for record in training_data_list:
+        # split the record by the ',' commas
+        all_values = record.split(',')
+        # scale and shift the inputs
+        #alt
+        #inputs = (numpy.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
+        #neu
+        inputs = (numpy.asarray(all_values[1:], dtype=float) / 255.0 * 0.99) + 0.01
+        # create the target output values (all 0.01, except the desired label which is 0.99)
+        targets = numpy.zeros(output_nodes) + 0.01
+        # all_values[0] is the target label for this record
+        targets[int(all_values[0])] = 0.99
+        n.train(inputs, targets)
+        pass
+    pass
+
+
+# load the mnist test data CSV file into a list
+#test_data_file = open("FIAE_KI\KNN_2.2.3_01_Mnist_small\mnist_dataset\mnist_test.csv", 'r')
+# daniel file path: C:\Users\dageitz\Documents\KlaraOpp\fp-plus\2.2.1\3muchachos11fi4\mnist_train.csv
+# lukas file path:
+# david file path: 
+test_data_file = open("./mnist_test.csv", 'r')
+
+test_data_list = test_data_file.readlines()
+test_data_file.close()
+
+
+# test the neural network
+# scorecard for how well the network performs, initially empty
+scorecard = []
+
+# go through all the records in the test data set
+for record in test_data_list:
+    # split the record by the ',' commas
+    all_values = record.split(',')
+    # correct answer is first value
+    correct_label = int(all_values[0])
+    # scale and shift the inputs
+    inputs = (numpy.asarray(all_values[1:], dtype=float) / 255.0 * 0.99) + 0.01
+    # query the network
+    outputs = n.query(inputs)
+    # the index of the highest value corresponds to the label
+    label = numpy.argmax(outputs)
+    # append correct or incorrect to list
+    if (label == correct_label):
+        # network's answer matches correct answer, add 1 to scorecard
+        scorecard.append(1)
+    else:
+        # network's answer doesn't match correct answer, add 0 to scorecard
+        scorecard.append(0)
+        pass 
+    
+    pass
+
+# calculate the performance score, the fraction of correct answers
+scorecard_array = numpy.asarray(scorecard)
+print ("performance = ", scorecard_array.sum() / scorecard_array.size)
+
 # train the neural network
 # NEW: Some small test_data
-input_list=[(1.0, 0.5, 0.3), (0.4, 0.9, 0.1)]
-target_list=[(1.0, 0.0, 0.0), (0.0, 1.0, 0.0)]
-n.train(input_list, target_list)
+#input_list=[(1.0, 0.5, 0.3), (0.4, 0.9, 0.1)]
+#target_list=[(1.0, 0.0, 0.0), (0.0, 1.0, 0.0)]
+#n.train(input_list, target_list)
 
 # test query (doesn't mean anything useful yet)
-output=n.query([1.0, 0.5, -1.5])
-print("Queryoutput:")
-print(output)
+# output=n.query([1.0, 0.5, -1.5])
+# print("Queryoutput:")
+# print(output)
