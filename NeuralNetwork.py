@@ -25,7 +25,6 @@ class NeuralNetwork:
         self.activation_function = lambda x: scipy.special.expit(x)
 
         pass
-
     # train the neural network
     def train(self, inputs_list, targets_list):
         print("I startet training ...")
@@ -103,6 +102,10 @@ training_data_file.close()
 # epochs is the number of times the training data set is used for training
 epochs = 7
 
+bekannteWerte = []
+counter = 1
+counterFail =1
+
 for e in range(epochs):
     # go through all records in the training data set
     for record in training_data_list:
@@ -118,9 +121,24 @@ for e in range(epochs):
         # all_values[0] is the target label for this record
         targets[int(all_values[0])] = 0.99
         n.train(inputs, targets)
+
+        # schreibe den richtigen wert aus:
+        outputs = n.query(inputs)
+        bekannteWerte.append(all_values[0])
+        max_wert = numpy.max(outputs)
+        index = numpy.where(outputs == max_wert)[0][0]
+
+        bekannter_wert = int(all_values[0])
+
+        if index == bekannter_wert:
+            counter += 1
+        else:
+            counterFail +=1
         pass
     pass
 
+print("Treffer:", counter)
+print("Fail:", counterFail)
 
 # load the mnist test data CSV file into a list
 #test_data_file = open("FIAE_KI\KNN_2.2.3_01_Mnist_small\mnist_dataset\mnist_test.csv", 'r')
